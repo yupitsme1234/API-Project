@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      review_id: {
+      spotId: {
         type: Sequelize.INTEGER
       },
       url: {
