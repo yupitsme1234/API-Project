@@ -35,11 +35,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
-      /* , uniqueKeys: {
-        actions_unique: {
-          fields: ['userId', 'spotId']
-        }
-      }*/
     });
   },
   async down(queryInterface, Sequelize) {
