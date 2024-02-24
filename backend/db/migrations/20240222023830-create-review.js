@@ -34,12 +34,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      },
-      uniqueKeys: {
+      }
+      /* , uniqueKeys: {
         actions_unique: {
           fields: ['userId', 'spotId']
         }
-      }
+      }*/
     });
   },
   async down(queryInterface, Sequelize) {
