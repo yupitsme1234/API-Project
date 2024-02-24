@@ -45,7 +45,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 })
 
 // Create a Review for a Spot based on the Spot's id
-router.post('/:spotId/reviews', async (req, res, next) => {
+router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     const { review, stars } = req.body;
     const { spotId } = req.params;
 
@@ -83,9 +83,7 @@ router.post('/:spotId/reviews', async (req, res, next) => {
             "message": "User already has a review for this spot"
         })
 
-    }
-
-    const newReview = await Review.create({ review, stars })
+    };
 
 })
 
@@ -109,7 +107,7 @@ router.get('/:spotId', async (req, res, next) => {
 // Edit a Spot
 router.patch('/:spotId', /** requireAuth, */ async (req, res, next) => {
     const { spotId } = req.params;
-    const updatedSpot = awaitSpot.findByPk(spotId);
+    const updatedSpot = await Spot.findByPk(spotId);
     if (!updatedSpot) {
         res.statusCode = 404;
         return res.json({
