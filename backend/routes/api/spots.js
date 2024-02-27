@@ -145,7 +145,7 @@ router.post('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
     };
 
     // Error response: Booking conflict
-    let bookings = Booking.findAll({
+    let bookings = await Booking.findAll({
         where: {
             spotId
         }
@@ -173,7 +173,11 @@ router.post('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
                 "endDate": "endDate cannot be on or before startDate"
             }
         });
-    }
+    };
+
+    const newBooking = await Booking.create({ spotId, ...req.body });
+    return res.json(newBooking)
+
 
 });
 
