@@ -2,6 +2,7 @@ const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const spotsRouter = require('./spots.js');
 const reviewsRouter = require('./reviews.js');
+const bookingsRouter = require('./bookings.js')
 
 const { restoreUser } = require("../../utils/auth.js");
 // backend/routes/api/index.js
@@ -46,7 +47,10 @@ router.get(
 router.use('/spots', spotsRouter)
 
 // REVIEWS Router
-router.use('/reviews', reviewsRouter)
+router.use('/reviews', reviewsRouter);
+
+// BOOKINGS Router
+router.use('/bookings', bookingsRouter)
 
 router.use('/session', sessionRouter);
 
