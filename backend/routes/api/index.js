@@ -50,7 +50,52 @@ router.use('/spots', spotsRouter)
 router.use('/reviews', reviewsRouter);
 
 // BOOKINGS Router
-router.use('/bookings', bookingsRouter)
+router.use('/bookings', bookingsRouter);
+
+// *****************************************
+//
+//                  IMAGES
+//
+// *****************************************
+const { SpotImage, ReviewImage } = require('../../db/models');
+
+// Delete a Spot Image
+router.delete('/spot-images/:imageId', async (req, res, next) => {
+    const { imageId } = req.params;
+    try {
+        const deletedImage = await SpotImage.findByPk(imageId);
+        await deletedImage.destroy();
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } catch {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Spot Image couldn't be found"
+        })
+    }
+
+
+});
+
+
+// Delete a Review Image
+router.delete('/review-images/:imageId', async (req, res, next) => {
+    const { imageId } = req.params;
+    try {
+        const deletedImage = await ReviewImage.findByPk(imageId);
+        await deletedImage.destroy();
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } catch {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Spot Image couldn't be found"
+        })
+    }
+
+})
 
 router.use('/session', sessionRouter);
 
