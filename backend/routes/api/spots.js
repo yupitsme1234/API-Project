@@ -10,7 +10,7 @@ const { Spot, SpotImage, Review, Booking } = require('../../db/models');
 
 
 // GET '/api/user/current'
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
     const spots = await Spot.findAll({
         where: {
             ownerId: req.user.id
