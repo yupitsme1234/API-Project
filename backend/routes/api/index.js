@@ -2,6 +2,7 @@ const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const spotsRouter = require('./spots.js');
 const reviewsRouter = require('./reviews.js');
+const bookingsRouter = require('./bookings.js')
 
 const { restoreUser } = require("../../utils/auth.js");
 // backend/routes/api/index.js
@@ -46,7 +47,55 @@ router.get(
 router.use('/spots', spotsRouter)
 
 // REVIEWS Router
-router.use('/reviews', reviewsRouter)
+router.use('/reviews', reviewsRouter);
+
+// BOOKINGS Router
+router.use('/bookings', bookingsRouter);
+
+// *****************************************
+//
+//                  IMAGES
+//
+// *****************************************
+const { SpotImage, ReviewImage } = require('../../db/models');
+
+// Delete a Spot Image
+router.delete('/spot-images/:imageId', async (req, res, next) => {
+    const { imageId } = req.params;
+    try {
+        const deletedImage = await SpotImage.findByPk(imageId);
+        await deletedImage.destroy();
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } catch {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Spot Image couldn't be found"
+        })
+    }
+
+
+});
+
+
+// Delete a Review Image
+router.delete('/review-images/:imageId', async (req, res, next) => {
+    const { imageId } = req.params;
+    try {
+        const deletedImage = await ReviewImage.findByPk(imageId);
+        await deletedImage.destroy();
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } catch {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Spot Image couldn't be found"
+        })
+    }
+
+})
 
 router.use('/session', sessionRouter);
 
