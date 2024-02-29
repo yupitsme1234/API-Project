@@ -122,8 +122,9 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 // Get all Bookings for a Spot based on the Spot's id
 router.get('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
     const { spotId } = req.params;
+    const userId = 1; //req.user.id
     const spot = await Spot.findOne({
-        where: { spotId }
+        where: { id: spotId }
     });
 
     if (!spot) {
@@ -133,23 +134,37 @@ router.get('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
         })
     }
 
-    if (spot.ownerId === req.user.id) {
+    if (spot.ownerId !== userId) {
+        const bookings = await Booking.findAll({
+            where: { spotId },
+            attributes: { exclude: ['createdAt', 'updatedAt', 'id', 'userId'] }
+        })
+        for (let booking of bookings) {
+            booking.dataValues.startDate = booking.startDate.toJSON().slice(0, 10);
+            booking.dataValues.endDate = booking.endDate.toJSON().slice(0, 10)
+        }
         return res.json({
             "Bookings": [
-                {
-                    spotId,
-                    "startDate": spot.startDate,
-                    "endDate": spot.endDate
-                }
-            ]
+                ...bookings]
         })
     }
+
+    const bookings = await Booking.findAll({
+        where: { spotId }
+    });
+    const user = await User.findOne({
+        where: { id: userId },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'username'] }
+
+    });
+
+    for (let booking of bookings) {
+        booking.dataValues.User = user
+    }
+
     return res.json({
         "Bookings": [
-            {
-                "User": req.user
-            },
-            spot
+            ...bookings
         ]
     })
 });

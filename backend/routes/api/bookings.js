@@ -9,13 +9,27 @@ const { Booking, Spot } = require('../../db/models');
 
 // Get all of the Current User's Bookings
 
-router.get('/current', /*requireAuth,*/ async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
+    const userId = req.user.id
     const bookings = await Booking.findAll({
         where: {
-            id: req.user.id
+            id: userId
         }
     });
-    return res.json(bookings)
+    for (let booking of bookings){
+        const spot = await Spot.findOne({
+            where: {
+                id: booking.spotId
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
+        booking.dataValues.Spot = spot;
+    }
+
+    return res.json({
+        "Bookings": [
+            ...bookings]
+    })
 });
 
 // Edit a Booking
