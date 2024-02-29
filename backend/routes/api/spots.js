@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const router = require('express').Router();
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, Booking, User } = require('../../db/models');
+const { Spot, SpotImage, Review, Booking, User, ReviewImage } = require('../../db/models');
 
 
 
@@ -14,7 +14,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
     const spots = await Spot.findAll({
         where: {
             ownerId: req.user.id
-            // ownerId: 1
         }
     });
     return res.json({
@@ -42,10 +41,32 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
     const reviews = await Review.findAll({
         where: { spotId }
-    })
-    return res.json(reviews)
+    });
 
+    for (let review of reviews) {
+        const user = await User.findOne({
+            where: {
+                id: review.userId
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
+        review.dataValues.User = user;
+
+        const reviewImages = await ReviewImage.findAll({
+            where: {
+                reviewId: review.id
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+        review.dataValues.ReviewImages = reviewImages
+    }
+    return res.json({
+        "Reviews": [
+            ...reviews,
+        ]
+    })
 })
+
 
 // Create a Review for a Spot based on the Spot's id
 router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {

@@ -4,23 +4,53 @@ const bcrypt = require('bcryptjs');
 const router = require('express').Router();
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Review, ReviewImage } = require('../../db/models');
+const { Review, ReviewImage, User, Spot } = require('../../db/models');
 
 // Get all reviews of current user
 router.get('/current', requireAuth, async (req, res, next) => {
+    const userId = req.user.id;
     const reviews = await Review.findAll({
         where: {
-            userId: req.user.id
+            userId
         }
-    })
-
+    });
     if (!reviews.length) {
         res.statusCode = 404;
         return res.json({
             "message": "User has no spots"
         })
     }
-    return res.json(reviews)
+
+
+    const user = await User.findByPk(userId);
+    for (let review of reviews) {
+        review.dataValues.User = user;
+
+        const spot = await Spot.findOne({
+            where: {
+                ownerId: userId
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+        review.dataValues.Spot = spot;
+
+        const reviewImages = await ReviewImage.findAll({
+            where: {
+                reviewId: review.id
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+
+        review.dataValues.ReviewImages = reviewImages
+
+    };
+
+
+    return res.json({
+        "Reviews": [
+            ...reviews,
+        ]
+    })
 
 });
 
@@ -28,7 +58,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 // Create a Review for a Spot based on the Spot's id -- found in spots.js
 
 // Add an Image to a Review based on the Review's id
-router.post('/:reviewId/images', /*requireAuth, */ async (req, res, next) => {
+router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const review = await Review.findByPk(reviewId);
     const { url } = req.body;
@@ -60,7 +90,7 @@ router.post('/:reviewId/images', /*requireAuth, */ async (req, res, next) => {
 
 // Edit a Review
 
-router.patch('./:reviewId',/*requireAuth, */ async (req, res, next) => {
+router.patch('./:reviewId',requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const updatedReview = await Review.findByPk(reviewId);
 
@@ -90,7 +120,7 @@ router.patch('./:reviewId',/*requireAuth, */ async (req, res, next) => {
 
 })
 // Delete a Review
-router.delete(':reviewId',/*requireAuth, */ async (req, res, next) => {
+router.delete(':reviewId',requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const deletedReview = await Review.findByPk(reviewId);
 
