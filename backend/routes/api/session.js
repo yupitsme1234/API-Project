@@ -69,6 +69,10 @@ router.get(
                 email: user.email,
                 username: user.username,
             };
+            if (user.firstName && user.lastName){
+                safeUser.firstName = user.firstName;
+                safeUser.lastName = user.lastName
+            }
             return res.json({
                 user: safeUser
             });
@@ -109,12 +113,16 @@ router.post(
             err.status = 401;
             err.title = 'Login failed';
             err.errors = { credential: 'The provided credentials were invalid.' };
-            return next(err);
+            return res.json({
+                "message" : "Invalid credentials"
+            });
         }
 
         const safeUser = {
             id: user.id,
             email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
             username: user.username,
         };
 
