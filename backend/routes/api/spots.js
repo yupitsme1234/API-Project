@@ -18,7 +18,23 @@ router.get('/current', requireAuth, async (req, res, next) => {
             ownerId: req.user.id
         }
     });
+    for (let spot of spots) {
+        const spotImage = await SpotImage.findOne({
+            where: {
+                spotId: spot.id
+            }
+        })
+        spot.dataValues.previewImage = spotImage.url;
 
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spot.id
+            }
+        })
+        const avgRating = reviews.reduce((acc, curr) => acc + curr.stars, 0) / reviews.length;
+
+        spot.dataValues.avgRating = avgRating;
+    }
 
     return res.json({
         "Spots": spots
@@ -323,7 +339,8 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         })
     }
     const newImage = await SpotImage.create({ spotId, ...req.body });
-    return res.json(newImage)
+    const { id, spodId, url, preview } = newImage;
+    return res.json({ id, spodId, url, preview })
 })
 
 
