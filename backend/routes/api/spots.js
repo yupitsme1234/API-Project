@@ -18,6 +18,24 @@ router.get('/current', requireAuth, async (req, res, next) => {
             ownerId: req.user.id
         }
     });
+    for (let spot of spots) {
+        const spotImage = await SpotImage.findOne({
+            where: {
+                spotId: spot.id
+            }
+        })
+        spot.dataValues.previewImage = spotImage.url;
+
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spot.id
+            }
+        })
+        const avgRating = reviews.reduce((acc, curr) => acc + curr.stars, 0) / reviews.length;
+
+        spot.dataValues.avgRating = avgRating;
+    }
+
     return res.json({
         "Spots": spots
     })
@@ -321,7 +339,8 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         })
     }
     const newImage = await SpotImage.create({ spotId, ...req.body });
-    return res.json(newImage)
+    const { id, spodId, url, preview } = newImage;
+    return res.json({ id, spodId, url, preview })
 })
 
 
@@ -380,6 +399,24 @@ router.get('/', async (req, res, next) => {
         };
     }
 
+    for (let spot of spots) {
+        const spotImage = await SpotImage.findOne({
+            where: {
+                spotId: spot.id
+            }
+        })
+        spot.dataValues.previewImage = spotImage.url;
+
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spot.id
+            }
+        })
+        const avgRating = reviews.reduce((acc, curr) => acc + curr.stars, 0) / reviews.length;
+
+        spot.dataValues.avgRating = avgRating;
+    }
+
     return res.json({
         "Spots": [...spots],
         page,
@@ -394,7 +431,8 @@ router.post('/', requireAuth, async (req, res, next) => {
     try {
         const newSpot = await Spot.create({ ownerId: 1, address, city, state, country, lat, lng, name, description, price });
         res.statusCode = 201;
-        return res.json(newSpot)
+        const { id, ownerId, address, city, state, country, lat, lng, name, description, price } = newSpot
+        return res.json({ id, ownerId, address, city, state, country, lat, lng, name, description, price })
     } catch {
         res.statusCode = 400;
         return res.json({
@@ -416,8 +454,7 @@ router.post('/', requireAuth, async (req, res, next) => {
 });
 
 router.use('/?', async (req, res, next) => {
-    const { page } = req.params;
-    console.log("PAGE", page)
+
     return res.json()
 })
 
