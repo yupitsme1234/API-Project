@@ -148,8 +148,8 @@ router.get('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
     });
 
     if (!spot) {
-        req.statusCode = 404;
-        return req.json({
+        res.statusCode = 404;
+        return res.json({
             "message": "Spot couldn't be found"
         })
     }

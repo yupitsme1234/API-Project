@@ -90,7 +90,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 // Edit a Review
 
-router.patch('./:reviewId',requireAuth, async (req, res, next) => {
+router.patch('/:reviewId',requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const updatedReview = await Review.findByPk(reviewId);
 
@@ -120,7 +120,7 @@ router.patch('./:reviewId',requireAuth, async (req, res, next) => {
 
 })
 // Delete a Review
-router.delete(':reviewId',requireAuth, async (req, res, next) => {
+router.delete('/:reviewId',requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const deletedReview = await Review.findByPk(reviewId);
 
