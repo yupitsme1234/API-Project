@@ -38,7 +38,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     const updatedBooking = await Booking.findByPk(bookingId);
     const currentDate = new Date();
 
-    if (!booking) {
+    if (!updatedBooking) {
         res.statusCode = 404;
         return res.json({
             "message": "Booking couldn't be found"
