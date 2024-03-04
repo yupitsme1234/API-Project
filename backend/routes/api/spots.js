@@ -290,6 +290,12 @@ router.get('/:spotId', async (req, res, next) => {
 router.put('/:spotId', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const updatedSpot = await Spot.findByPk(spotId);
+    if (!updatedSpot) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Spot couldn't be found"
+        })
+    };
 
     if (updatedSpot.ownerId !== req.user.id) {
         res.statusCode = 404;
@@ -298,12 +304,7 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
         })
     };
 
-    if (!updatedSpot) {
-        res.statusCode = 404;
-        return res.json({
-            "message": "Spot couldn't be found"
-        })
-    };
+
 
 
     try {
@@ -353,10 +354,10 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 })
 
 // Add an Image to a Spot based on the Spot's id
-router.post('/:spotId/images', requireAuth, async (req, res, next) => {
+router.post('/:spotId/images', /* requireAuth, */ async (req, res, next) => {
     const { spotId } = req.params;
     const spot = await Spot.findByPk(spotId);
-
+    console.log("SPOT", spot.ownerId)
     if (spot.ownerId !== req.user.id) {
         res.statusCode = 404;
         return res.json({
