@@ -92,7 +92,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 router.put('/:reviewId',requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
-    const updatedReview = await Review.findByPk(reviewId);
+    const updatedReview = await Review.findByPk(Number(reviewId));
 
     // Couldn't find a Review with the specified id
     if (!updatedReview) {

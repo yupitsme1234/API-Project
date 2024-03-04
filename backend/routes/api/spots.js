@@ -59,6 +59,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         })
     }
 
+
     const reviews = await Review.findAll({
         where: { spotId }
     });
@@ -105,7 +106,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
         })
     };
 
-    const spot = Spot.findByPk(spotId);
+    const spot = await Spot.findByPk(spotId);
 
     // Couldn't find spot by id
     if (!spot) {
@@ -115,19 +116,27 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
         })
     };
 
-    try {
+    const reviewCheck = await Review.findOne({
+        where: {
+            spotId: spot.id,
+            userId: req.user.id
+        }
+    })
+
+
+    if (!reviewCheck) {
         const newReview = await Review.create({ userId: req.user.id, spotId, review, stars, });
         res.statusCode = 201;
         return res.json(newReview)
+    }
 
-    } catch {
-        //Review from the current user already exists for the Spot
-        res.statusCode = 500;
-        return res.json({
-            "message": "User already has a review for this spot"
-        })
+    //Review from the current user already exists for the Spot
+    res.statusCode = 500;
+    return res.json({
+        "message": "User already has a review for this spot"
+    })
 
-    };
+        ;
 
 })
 
