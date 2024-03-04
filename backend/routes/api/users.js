@@ -54,7 +54,7 @@ router.post(
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                password: user.hashedPassword
+                //password: user.hashedPassword
             };
 
             await setTokenCookie(res, safeUser);
