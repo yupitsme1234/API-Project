@@ -219,8 +219,8 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         }
     });
 
-    bookings = bookings.filter((booking) => booking.startDate.toString() < endDate.toString());
-    bookings = bookings.filter((booking) => booking.endDate.toString() > startDate.toString());
+    bookings = bookings.filter((booking) => Date.parse(booking.startDate) < Date.parse(startDate));
+    bookings = bookings.filter((booking) => Date.parse(booking.endDate) > Date.parse(endDate));
     if (bookings.length) {
         res.statusCode = 403;
         return res.json({
@@ -243,11 +243,8 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             }
         });
     };
-
-    console.log("twas hit")
     const newBooking = await Booking.create({ userId: req.user.id, spotId, ...req.body });
     return res.json(newBooking)
-
 
 });
 
