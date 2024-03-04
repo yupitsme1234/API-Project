@@ -60,7 +60,7 @@ router.use('/bookings', bookingsRouter);
 const { SpotImage, ReviewImage } = require('../../db/models');
 
 // Delete a Spot Image
-router.delete('/spot-images/:imageId', async (req, res, next) => {
+router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
     const { imageId } = req.params;
     try {
         const deletedImage = await SpotImage.findByPk(imageId);
@@ -80,7 +80,7 @@ router.delete('/spot-images/:imageId', async (req, res, next) => {
 
 
 // Delete a Review Image
-router.delete('/review-images/:imageId', async (req, res, next) => {
+router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => {
     const { imageId } = req.params;
     try {
         const deletedImage = await ReviewImage.findByPk(imageId);

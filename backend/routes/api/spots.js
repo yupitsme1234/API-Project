@@ -140,7 +140,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 //
 
 // Get all Bookings for a Spot based on the Spot's id
-router.get('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const userId = 1; //req.user.id
     const spot = await Spot.findOne({
@@ -189,7 +189,7 @@ router.get('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
     })
 });
 
-router.post('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const { startDate, endDate } = req.body
     const currentDate = new Date().toString();
@@ -279,7 +279,7 @@ router.get('/:spotId', async (req, res, next) => {
 })
 
 // Edit a Spot
-router.patch('/:spotId', requireAuth, async (req, res, next) => {
+router.put('/:spotId', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const updatedSpot = await Spot.findByPk(spotId);
     if (!updatedSpot) {
