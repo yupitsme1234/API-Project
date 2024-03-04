@@ -62,18 +62,36 @@ const { SpotImage, ReviewImage } = require('../../db/models');
 // Delete a Spot Image
 router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
     const { imageId } = req.params;
-    try {
-        const deletedImage = await SpotImage.findByPk(imageId);
-        await deletedImage.destroy();
-        return res.json({
-            "message": "Successfully deleted"
-        })
-    } catch {
+
+    const deletedImage = await SpotImage.findByPk(imageId);
+
+    if (!deletedImage) {
         res.statusCode = 404;
         return res.json({
             "message": "Spot Image couldn't be found"
         })
     }
+    const spot = await SpotImage.findOne({
+        where: {
+            id: SpotImage.spotId
+        }
+    })
+
+    if (spot.ownerId !== req.user.id) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Forbidden"
+        })
+    };
+
+
+    await deletedImage.destroy();
+    return res.json({
+        "message": "Successfully deleted"
+    });
+
+
+
 
 
 });
