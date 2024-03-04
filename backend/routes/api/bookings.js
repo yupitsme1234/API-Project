@@ -47,7 +47,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     };
 
     // Require proper authorization: Booking must belong to the current user
-    if (booking.userId !== req.user.id) {
+    if (updatedBooking.userId !== req.user.id) {
         throw new Error("Booking does not belong to user");
     }
 
