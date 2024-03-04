@@ -14,7 +14,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 router.post(
     '/',
     async (req, res) => {
-        const { email, password, username } = req.body;
+        const { email, password, username, firstName,  lastName } = req.body;
         const hashedPassword = bcrypt.hashSync(password);
         // Error response: User already exists with the specified email
         const emailCheck = await User.findOne({
@@ -47,7 +47,7 @@ router.post(
         }
 
         try{
-            const user = await User.create({ email, username, hashedPassword });
+            const user = await User.create({ email, username, hashedPassword, firstName, lastName });
         } catch {
             res.statusCode = 404;
             return res.json({
@@ -66,6 +66,9 @@ router.post(
             id: user.id,
             email: user.email,
             username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.hashedPassword
         };
 
         await setTokenCookie(res, safeUser);
