@@ -33,7 +33,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 // Edit a Booking
-router.patch('/:bookingId', /*requireAuth,*/ async (req, res, next) => {
+router.put('/:bookingId', requireAuth, async (req, res, next) => {
     const { bookingId } = req.params;
     const updatedBooking = await Booking.findByPk(bookingId);
     const currentDate = new Date();
@@ -97,7 +97,7 @@ router.patch('/:bookingId', /*requireAuth,*/ async (req, res, next) => {
 });
 
 // Delete a booking
-router.delete('/:bookingId', /*requireAuth,*/ async (req, res, next) => {
+router.delete('/:bookingId', requireAuth, async (req, res, next) => {
     const { bookingId } = req.params;
     const booking = await Booking.findByPk(bookingId);
     const spot = await Spot.findByPk(booking.spotId);
