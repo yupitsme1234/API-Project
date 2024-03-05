@@ -75,7 +75,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     // Error response: Booking conflict
     let bookings = await Booking.findAll({
         where: {
-            bookingId
+            id: bookingId
         }
     });
     let error = false;
