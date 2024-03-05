@@ -201,7 +201,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
 router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const { startDate, endDate } = req.body
-    const currentDate = new Date().toString();
+    const currentDate = new Date();
     const spot = await Spot.findByPk(spotId);
 
     // Error response: Couldn't find a Spot with the specified id
@@ -220,13 +220,12 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     });
     let error = false;
 
-    console.log("BOOKINGS", bookings)
     for (let booking of bookings){
-        if (booking.endDate >= endDate && booking.startDate <= startDate){
+        if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
             error = true;
-        } else if (startDate <= booking.startDate && booking.startDate <= endDate){
+        } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)){
             error = true
-        } else if (startDate <= booking.endDate && booking.endDate <= endDate){
+        } else if (Date.parse(startDate) <= Date.parse(booking.endDate) && Date.parse(booking.endDate) <= Date.parse(endDate)){
             error = true;
         }
     }
