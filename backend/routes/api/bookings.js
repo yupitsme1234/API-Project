@@ -85,7 +85,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     if (startDate === endDate) error = true;
     for (let booking of bookings){
-        if (booking.Id === bookingId) continue
+        if (booking.id === bookingId) continue
         if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
             error = true;
         } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)){
