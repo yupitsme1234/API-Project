@@ -212,6 +212,13 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         })
     };
 
+    if (spot.ownerId !== req.user.id) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Forbidden"
+        })
+    };
+
     // Error response: Booking conflict
     let bookings = await Booking.findAll({
         where: {

@@ -90,7 +90,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 // Edit a Review
 
-router.put('/:reviewId',requireAuth, async (req, res, next) => {
+router.put('/:reviewId', requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const updatedReview = await Review.findByPk(Number(reviewId));
 
@@ -102,6 +102,12 @@ router.put('/:reviewId',requireAuth, async (req, res, next) => {
         })
     }
 
+    if (updatedReview.userId !== req.user.id) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Forbidden"
+        })
+    };
     try {
         updatedReview.set(req.body);
         await updatedReview.save();
@@ -120,7 +126,7 @@ router.put('/:reviewId',requireAuth, async (req, res, next) => {
 
 })
 // Delete a Review
-router.delete('/:reviewId',requireAuth, async (req, res, next) => {
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const deletedReview = await Review.findByPk(reviewId);
 
@@ -130,6 +136,13 @@ router.delete('/:reviewId',requireAuth, async (req, res, next) => {
             "message": "Review couldn't be found"
         })
     };
+    if (deletedReview.userId !== req.user.id) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Forbidden"
+        })
+    };
+    await deletedReview.destroy()
     return res.json({
         "message": "Successfully deleted"
     })
