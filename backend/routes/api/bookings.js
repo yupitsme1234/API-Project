@@ -114,7 +114,10 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
     const currentDate = new Date();
 
     if (booking.userId !== req.user.id && spot.ownerId !== req.user.id) {
-        throw new Error("Only Owners or Bookers can delete a booking")
+        res.statusCode = 403;
+        return res.json({
+            "message": "Forbidden"
+        })
     };
 
     if (!booking) {
