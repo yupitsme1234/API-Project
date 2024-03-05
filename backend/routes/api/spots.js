@@ -457,7 +457,7 @@ router.get('/', async (req, res, next) => {
                 spotId: spot.id
             }
         })
-        if (spotImage.url) {
+        if (spotImage) {
             spot.dataValues.previewImage = spotImage.url;
         }
         const reviews = await Review.findAll({
