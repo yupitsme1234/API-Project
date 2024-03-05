@@ -84,13 +84,13 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     let error = false;
 
     if (startDate === endDate) error = true;
-    for (let booking of bookings){
+    for (let booking of bookings) {
         if (Number(booking.id) === Number(bookingId)) continue
-        if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
+        if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)) {
             error = true;
-        } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)){
+        } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)) {
             error = true
-        } else if (Date.parse(startDate) <= Date.parse(booking.endDate) && Date.parse(booking.endDate) <= Date.parse(endDate)){
+        } else if (Date.parse(startDate) <= Date.parse(booking.endDate) && Date.parse(booking.endDate) <= Date.parse(endDate)) {
             error = true;
         } else if (Date.parse(startDate) === Date.parse(booking.startDate)) error = true
     }
@@ -117,7 +117,13 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
     const booking = await Booking.findByPk(bookingId);
     const spot = await Spot.findByPk(booking.spotId);
     const currentDate = new Date();
-
+    if (!booking) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Booking couldn't be found"
+        })
+    };
+    
     if (booking.userId !== req.user.id && spot.ownerId !== req.user.id) {
         res.statusCode = 403;
         return res.json({
@@ -125,12 +131,7 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
         })
     };
 
-    if (!booking) {
-        res.statusCode = 404;
-        return res.json({
-            "message": "Booking couldn't be found"
-        })
-    };
+
 
     if (Date.parse(booking.startDate) < Date.parse(currentDate)) {
         res.statusCode = 403;
@@ -141,7 +142,7 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
     await booking.destroy()
     return res.json({
         "message": "Successfully deleted"
-      })
+    })
 })
 
 module.exports = router;
