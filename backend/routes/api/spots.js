@@ -391,8 +391,8 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
 
     const newImage = await SpotImage.create({ spotId, ...req.body });
-    const { id, spodId, url, preview } = newImage;
-    return res.json({ id, spodId, url, preview })
+    const { id, url, preview } = newImage;
+    return res.json({ id, spotId, url, preview })
 })
 
 
@@ -457,7 +457,7 @@ router.get('/', async (req, res, next) => {
                 spotId: spot.id
             }
         })
-        if (spotImage) {
+        if (spotImage.url) {
             spot.dataValues.previewImage = spotImage.url;
         }
         const reviews = await Review.findAll({
