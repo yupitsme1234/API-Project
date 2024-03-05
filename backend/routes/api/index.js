@@ -13,6 +13,7 @@ router.post('/test', function (req, res) {
 // GET /api/set-token-cookie
 const { setTokenCookie } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
+const { Review } = require('../../db/models');
 router.get('/set-token-cookie', async (_req, res) => {
     const user = await User.findOne({
         where: {
@@ -100,20 +101,29 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
 // Delete a Review Image
 router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => {
     const { imageId } = req.params;
-    try {
-        const deletedImage = await ReviewImage.findByPk(imageId);
-        await deletedImage.destroy();
-        return res.json({
-            "message": "Successfully deleted"
-        })
-    } catch {
+    const deletedImage = await ReviewImage.findByPk(imageId);
+    if (!deletedImage) {
         res.statusCode = 404;
         return res.json({
             "message": "Spot Image couldn't be found"
         })
     }
+    const review = await Review.findByPk(deletedImage.reviewId)
 
+    if (review.userId !== req.user.id) {
+        res.statusCode = 404;
+        return res.json({
+            "message": "Forbidden"
+        })
+    };
+
+    await deletedImage.destroy();
+    return res.json({
+        "message": "Successfully deleted"
+    })
 })
+
+
 
 router.use('/session', sessionRouter);
 
