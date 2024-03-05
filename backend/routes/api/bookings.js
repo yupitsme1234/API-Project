@@ -84,8 +84,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     let error = false;
 
     if (startDate === endDate) error = true;
-    bookings = bookings.filter((booking) => booking.id !== bookingId);
     for (let booking of bookings){
+        if (Number(booking.id) === Number(bookingId)) continue
         if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
             error = true;
         } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)){
