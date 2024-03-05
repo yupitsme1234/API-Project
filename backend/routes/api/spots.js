@@ -198,7 +198,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     })
 });
 
-router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
+router.post('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
     const { spotId } = req.params;
     const { startDate, endDate } = req.body
     const currentDate = new Date().toString();
@@ -215,13 +215,23 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     // Error response: Booking conflict
     let bookings = await Booking.findAll({
         where: {
-            spotId
-        }
+            spotId,
+        },
     });
+    let error = false;
 
-    bookings = bookings.filter((booking) => Date.parse(booking.startDate) < Date.parse(startDate));
-    bookings = bookings.filter((booking) => Date.parse(booking.endDate) > Date.parse(endDate));
-    if (bookings.length) {
+    console.log("BOOKINGS", bookings)
+    for (let booking of bookings){
+        if (booking.endDate >= endDate && booking.startDate <= startDate){
+            error = true;
+        } else if (startDate <= booking.startDate && booking.startDate <= endDate){
+            error = true
+        } else if (startDate <= booking.endDate && booking.endDate <= endDate){
+            error = true;
+        }
+    }
+
+    if (error) {
         res.statusCode = 403;
         return res.json({
             "message": "Sorry, this spot is already booked for the specified dates",
@@ -231,6 +241,8 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             }
         })
     }
+
+
 
     // Error response: Body validation errors
     if (Date.parse(startDate) < Date.parse(currentDate) || Date.parse(startDate) > Date.parse(endDate)) {
@@ -354,7 +366,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 })
 
 // Add an Image to a Spot based on the Spot's id
-router.post('/:spotId/images', /* requireAuth, */ async (req, res, next) => {
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const spot = await Spot.findByPk(spotId);
     console.log("SPOT", spot.ownerId)

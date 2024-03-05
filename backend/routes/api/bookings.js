@@ -47,7 +47,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     };
 
     // Require proper authorization: Booking must belong to the current user
-    if (booking.userId !== req.user.id) {
+    if (updatedBooking.userId !== req.user.id) {
         throw new Error("Booking does not belong to user");
     }
 
@@ -79,6 +79,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     });
     bookings = bookings.filter((booking) => booking.startDate.toString() < endDate.toString());
     bookings = bookings.filter((booking) => booking.endDate.toString() > startDate.toString());
+
+    console.log("BOOKINGS", bookings)
     if (bookings.length) {
         res.statusCode = 403;
         return res.json({
