@@ -16,7 +16,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             id: userId
         }
     });
-    for (let booking of bookings){
+    for (let booking of bookings) {
         const spot = await Spot.findOne({
             where: {
                 id: booking.spotId
@@ -35,6 +35,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 // Edit a Booking
 router.put('/:bookingId', requireAuth, async (req, res, next) => {
     const { bookingId } = req.params;
+    const { startDate, endDate } = req.body;
     const updatedBooking = await Booking.findByPk(bookingId);
     const currentDate = new Date();
 
