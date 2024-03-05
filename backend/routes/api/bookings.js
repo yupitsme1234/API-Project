@@ -78,14 +78,14 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     // Error response: Booking conflict
     let bookings = await Booking.findAll({
         where: {
-            id: bookingId
+            spotId: updatedBooking.spotId
         }
     });
     let error = false;
 
     if (startDate === endDate) error = true;
+    bookings = booking.filter(booking.id !== bookingId);
     for (let booking of bookings){
-        if (booking.id === bookingId) continue
         if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
             error = true;
         } else if (Date.parse(startDate) <= Date.parse(booking.startDate) && Date.parse(booking.startDate) <= Date.parse(endDate)){
