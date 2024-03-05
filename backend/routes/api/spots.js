@@ -198,7 +198,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     })
 });
 
-router.post('/:spotId/bookings', /* requireAuth, */ async (req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const { startDate, endDate } = req.body
     const currentDate = new Date().toString();
