@@ -213,7 +213,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     };
 
     if (spot.ownerId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })
@@ -318,7 +318,7 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
     };
 
     if (updatedSpot.ownerId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })
@@ -362,7 +362,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
     };
 
     if (deletedSpot.ownerId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })
@@ -379,7 +379,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     const spot = await Spot.findByPk(spotId);
     console.log("SPOT", spot.ownerId)
     if (spot.ownerId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })

@@ -79,7 +79,7 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
     })
 
     if (spot.ownerId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })
@@ -111,7 +111,7 @@ router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => 
     const review = await Review.findByPk(deletedImage.reviewId)
 
     if (review.userId !== req.user.id) {
-        res.statusCode = 404;
+        res.statusCode = 403;
         return res.json({
             "message": "Forbidden"
         })
