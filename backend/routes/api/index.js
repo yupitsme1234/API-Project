@@ -58,7 +58,7 @@ router.use('/bookings', bookingsRouter);
 //                  IMAGES
 //
 // *****************************************
-const { SpotImage, ReviewImage } = require('../../db/models');
+const { SpotImage, ReviewImage, Spot } = require('../../db/models');
 
 // Delete a Spot Image
 router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
