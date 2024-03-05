@@ -61,7 +61,7 @@ router.use('/bookings', bookingsRouter);
 const { SpotImage, ReviewImage } = require('../../db/models');
 
 // Delete a Spot Image
-router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
+router.delete('/spot-images/:imageId', /* requireAuth, */ async (req, res, next) => {
     const { imageId } = req.params;
 
     const deletedImage = await SpotImage.findByPk(imageId);
@@ -72,7 +72,7 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
             "message": "Spot Image couldn't be found"
         })
     }
-    const spot = await SpotImage.findOne({
+    const spot = await Spot.findOne({
         where: {
             spotId: deletedImage.spotId
         }
