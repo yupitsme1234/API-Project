@@ -49,7 +49,10 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     // Require proper authorization: Booking must belong to the current user
     if (updatedBooking.userId !== req.user.id) {
-        throw new Error("Booking does not belong to user");
+        res.statusCode = 403;
+        return res.json({
+            "message": "Forbidden"
+        });
     }
 
     // Error response: Body validation errors
@@ -80,6 +83,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     });
     let error = false;
 
+    if (startDate === endDate) error = true;
+
     for (let booking of bookings){
         if (Date.parse(booking.endDate) >= Date.parse(endDate) && Date.parse(booking.startDate) <= Date.parse(startDate)){
             error = true;
@@ -87,7 +92,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
             error = true
         } else if (Date.parse(startDate) <= Date.parse(booking.endDate) && Date.parse(booking.endDate) <= Date.parse(endDate)){
             error = true;
-        }
+        } else if (Date.parse(startDate) === Date.parse(booking.startDate)) error = true
     }
     if (error) {
         res.statusCode = 403;
