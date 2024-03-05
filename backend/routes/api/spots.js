@@ -227,7 +227,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             error = true
         } else if (Date.parse(startDate) <= Date.parse(booking.endDate) && Date.parse(booking.endDate) <= Date.parse(endDate)){
             error = true;
-        }
+        } else if (Date.parse(startDate) === Date.parse(endDate))
     }
 
     if (error) {
