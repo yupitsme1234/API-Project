@@ -24,8 +24,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 spotId: spot.id
             }
         })
-        spot.dataValues.previewImage = spotImage.url;
-
+        if (spotImage.url) {
+            spot.dataValues.previewImage = spotImage.url;
+        }
         const reviews = await Review.findAll({
             where: {
                 spotId: spot.id
@@ -392,7 +393,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
     const newImage = await SpotImage.create({ spotId, ...req.body });
     const { id, url, preview } = newImage;
-    return res.json({ id, spotId, url, preview })
+    return res.json({ id, url, preview })
 })
 
 
@@ -508,9 +509,5 @@ router.post('/', requireAuth, async (req, res, next) => {
 
 });
 
-router.use('/?', async (req, res, next) => {
-
-    return res.json()
-})
 
 module.exports = router;
