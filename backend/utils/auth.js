@@ -66,7 +66,7 @@ const requireAuth = function (req, _res, next) {
     err.title = 'Authentication required';
     err.errors = { message: 'Authentication required' };
     err.status = 401;
-    return next(err.errors);
+    return _res.json(err.errors);
 }
 
 module.exports = { setTokenCookie, restoreUser, requireAuth };
