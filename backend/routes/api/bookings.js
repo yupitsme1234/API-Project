@@ -55,6 +55,14 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         });
     }
 
+     // Error response: Can't edit a booking that's past the end date
+     if (Date.parse(endDate) < Date.parse(currentDate)) {
+        res.statusCode = 403;
+        return res.json({
+            "message": "Past bookings can't be modified"
+        })
+    };
+
     // Error response: Body validation errors
     if (Date.parse(startDate) < Date.parse(currentDate) || Date.parse(startDate) > Date.parse(endDate)) {
         res.statusCode = 400;
@@ -67,13 +75,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         });
     }
 
-    // Error response: Can't edit a booking that's past the end date
-    if (Date.parse(endDate) < Date.parse(currentDate)) {
-        res.statusCode = 403;
-        return res.json({
-            "message": "Past bookings can't be modified"
-        })
-    };
+
 
     // Error response: Booking conflict
     let bookings = await Booking.findAll({
