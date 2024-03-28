@@ -24,9 +24,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 spotId: spot.id
             }
         })
-        if (spotImage.url) {
-            spot.dataValues.previewImage = spotImage.url;
-        }
+        // if (spotImage.url) {
+        //     spot.dataValues.previewImage = spotImage.url;
+        // }
         const reviews = await Review.findAll({
             where: {
                 spotId: spot.id
@@ -257,10 +257,10 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         })
     }
     if (Date.parse(startDate) < Date.parse(currentDate) && Date.parse(endDate) < Date.parse(currentDate)) {
-        res.statusCode = 403;
+        res.statusCode = 400;
         return res.json({
             "message": "Past bookings can't be modified"
-          });
+        });
     };
 
 
