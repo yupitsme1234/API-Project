@@ -30,7 +30,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             where: {
                 id: review.spotId
             },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
+            attributes: { exclude: ['description','createdAt', 'updatedAt'] }
         });
         review.dataValues.Spot = spot;
 
@@ -38,7 +38,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             where: {
                 reviewId: review.id
             },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
+            attributes: { exclude: ['reviewId', 'createdAt', 'updatedAt'] }
         });
 
         review.dataValues.ReviewImages = reviewImages
