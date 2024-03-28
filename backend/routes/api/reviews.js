@@ -28,7 +28,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
         const spot = await Spot.findOne({
             where: {
-                ownerId: userId
+                id: review.spotId
             },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
@@ -92,7 +92,11 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     };
 
     const newImage = await ReviewImage.create({ reviewId, url })
-    return res.json(newImage)
+
+    return res.json({
+        "id": newImage.id,
+        url
+    })
 
 })
 
