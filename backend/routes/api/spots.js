@@ -26,6 +26,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
         })
         if (spotImage) {
             spot.dataValues.previewImage = spotImage.url;
+        } else {
+            spot.dataValues.previewImage = null;
         }
         const reviews = await Review.findAll({
             where: {
