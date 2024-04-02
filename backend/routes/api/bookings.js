@@ -46,12 +46,14 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 
-function bookingConflict(startDate, endDate, booking) {
+function bookingConflict(startDate, endDate, booking, bookingId) {
     const bookingStart = Date.parse(booking.startDate);
     const bookingEnd = Date.parse(booking.endDate);
     const now = new Date();
     let statusCode = 403;
     let errors = {};
+
+    if (booking.id === bookingId) return [ errors, 200]
 
     // Start date conflicts with booking
     if (Date.parse(startDate) >= bookingStart && Date.parse(startDate) <= bookingEnd) {
@@ -111,8 +113,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         }
     });
     for (let booking of bookings) {
-        if (booking.id === bookingId) continue;
-        let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking);
+        let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking, bookingId);
         if (Object.keys(errors).length) {
             if (statusCode === 403) {
                 res.statusCode = 403;
