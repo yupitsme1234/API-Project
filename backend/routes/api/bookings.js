@@ -111,6 +111,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         }
     });
     for (let booking of bookings) {
+        if (booking.id === bookingId) continue;
         let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking);
         if (Object.keys(errors).length) {
             if (statusCode === 403) {
