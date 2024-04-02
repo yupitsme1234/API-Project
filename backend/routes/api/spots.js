@@ -181,7 +181,7 @@ function bookingConflict(startDate, endDate, booking) {
         errors["endDate"] = "endDate cannot be on or before startDate";
         statusCode = 400
     }
-    return { errors, statusCode }
+    return [ errors, statusCode ]
 }
 
 // Get all Bookings for a Spot based on the Spot's id
@@ -270,7 +270,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
 
     for (let booking of bookings) {
-        let { errors, statusCode } = bookingConflict(startDate, endDate, booking);
+        let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking);
         if (Object.keys(errors).length) {
             if (statusCode = 403) {
                 res.statusCode = 403;

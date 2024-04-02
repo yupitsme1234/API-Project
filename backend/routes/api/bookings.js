@@ -65,12 +65,12 @@ function bookingConflict(startDate, endDate, booking) {
 
     if (Date.parse(now) > Date.parse(startDate)) {
         errors["startDate"] = "startDate cannot be in the past";
-        statusCode = 400
+        statusCode = 400;
     } if (Date.parse(now) > Date.parse(endDate) || endDate <= startDate) {
         errors["endDate"] = "endDate cannot be on or before startDate";
         statusCode = 400
     }
-    return { errors, statusCode }
+    return [errors, statusCode]
 }
 
 // Edit a Booking
@@ -111,7 +111,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         }
     });
     for (let booking of bookings) {
-        let { errors, statusCode } = bookingConflict(startDate, endDate, booking);
+        let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking);
         if (Object.keys(errors).length) {
             if (statusCode = 403) {
                 res.statusCode = 403;
