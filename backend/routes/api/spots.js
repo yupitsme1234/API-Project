@@ -158,18 +158,18 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 //
 
 function bookingConflict(startDate, endDate, booking) {
-    const bookingStart = booking.startDate;
-    const bookingEnd = booking.endDate;
+    const bookingStart = Date.parse(booking.startDate);
+    const bookingEnd = Date.parse(booking.endDate);
     const now = new Date();
     let statusCode = 403;
     let errors = {};
 
     // Start date conflicts with booking
-    if (startDate >= bookingStart && startDate <= bookingEnd) {
+    if (Date.parse(startDate) >= bookingStart && Date.parse(startDate) <= bookingEnd) {
         errors["startDate"] = "Start date conflicts with an existing booking"
-    } if (endDate >= bookingStart && endDate <= bookingEnd) {
+    } if (Date.parse(endDate) >= bookingStart && Date.parse(endDate) <= bookingEnd) {
         errors["endDate"] = "End date conflicts with an existing booking"
-    } if (startDate < bookingStart && endDate > bookingEnd) {
+    } if (Date.parse(startDate) < bookingStart && Date.parse(endDate) > bookingEnd) {
         errors["startDate"] = "Start date conflicts with an existing booking"
         errors["endDate"] = "End date conflicts with an existing booking";
     }

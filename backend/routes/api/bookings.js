@@ -30,9 +30,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 preview: true
             }
         })
-        if (spotImage){
+        if (spotImage) {
             spot.dataValues.previewImage = spotImage.url;
-        } else{
+        } else {
             spot.dataValues.previewImage = null;
         }
 
@@ -47,18 +47,18 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
 
 function bookingConflict(startDate, endDate, booking) {
-    const bookingStart = booking.startDate;
-    const bookingEnd = booking.endDate;
+    const bookingStart = Date.parse(booking.startDate);
+    const bookingEnd = Date.parse(booking.endDate);
     const now = new Date();
     let statusCode = 403;
     let errors = {};
 
     // Start date conflicts with booking
-    if (startDate >= bookingStart && startDate <= bookingEnd) {
+    if (Date.parse(startDate) >= bookingStart && Date.parse(startDate) <= bookingEnd) {
         errors["startDate"] = "Start date conflicts with an existing booking"
-    } if (endDate >= bookingStart && endDate <= bookingEnd) {
+    } if (Date.parse(endDate) >= bookingStart && Date.parse(endDate) <= bookingEnd) {
         errors["endDate"] = "End date conflicts with an existing booking"
-    } if (startDate < bookingStart && endDate > bookingEnd) {
+    } if (Date.parse(startDate) < bookingStart && Date.parse(endDate) > bookingEnd) {
         errors["startDate"] = "Start date conflicts with an existing booking"
         errors["endDate"] = "End date conflicts with an existing booking";
     }
@@ -96,15 +96,15 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         });
     }
 
-     // Error response: Can't edit a booking that's past the end date
-     if (Date.parse(endDate) < Date.parse(currentDate) && startDate < endDate) {
+    // Error response: Can't edit a booking that's past the end date
+    if (Date.parse(endDate) < Date.parse(currentDate) && startDate < endDate) {
         res.statusCode = 403;
         return res.json({
             "message": "Past bookings can't be modified"
         })
     };
 
-       // Error response: Booking conflict and body validation
+    // Error response: Booking conflict and body validation
     let bookings = await Booking.findAll({
         where: {
             spotId: updatedBooking.spotId
