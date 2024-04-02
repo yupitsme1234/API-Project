@@ -127,19 +127,19 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     })
 
 
-    if (!reviewCheck) {
-        const newReview = await Review.create({ userId: req.user.id, spotId, review, stars, });
-        res.statusCode = 201;
-        return res.json(newReview)
+    if (reviewCheck) {
+        //Review from the current user already exists for the Spot
+        res.statusCode = 500;
+        return res.json({
+            "message": "User already has a review for this spot"
+        });
     }
 
-    //Review from the current user already exists for the Spot
-    res.statusCode = 500;
-    return res.json({
-        "message": "User already has a review for this spot"
-    })
 
-        ;
+
+    const newReview = await Review.create({ userId: req.user.id, spotId, review, stars, });
+    res.statusCode = 201;
+    return res.json(newReview)
 
 })
 
@@ -317,11 +317,11 @@ router.get('/:spotId', async (req, res, next) => {
 
     let avgStarRating = 0;
 
-    for (let review of numReviews){
-        avgStarRating+= Number(review.stars)
+    for (let review of numReviews) {
+        avgStarRating += Number(review.stars)
     }
 
-    avgStarRating = avgStarRating/numReviews.length
+    avgStarRating = avgStarRating / numReviews.length
 
     const response = {
         ...spot.toJSON(),

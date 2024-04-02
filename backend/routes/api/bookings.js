@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const router = require('express').Router();
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Booking, Spot } = require('../../db/models');
+const { Booking, Spot, SpotImage } = require('../../db/models');
 
 
 // Get all of the Current User's Bookings
@@ -23,7 +23,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         })
-        booking.dataValues.Spot = spot;
+
         const spotImage = await SpotImage.findOne({
             where: {
                 spotId: spot.id,
@@ -31,10 +31,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
             }
         })
         if (spotImage){
-            booking.dataValues.Spot.previewImage = spotImage.url;
+            spot.previewImage = spotImage.url;
         } else{
-            booking.dataValues.Spot.previewImage = null;
+            spot.previewImage = null;
         }
+
+        booking.dataValues.Spot = spot;
     }
 
     return res.json({

@@ -33,8 +33,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
             attributes: { exclude: ['description','createdAt', 'updatedAt'] }
         });
 
-        review.dataValues.Spot = spot;
-
         const spotImage = await SpotImage.findOne({
             where: {
                 spotId: spot.id,
@@ -42,10 +40,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
             }
         })
         if (spotImage){
-            review.dataValues.Spot.previewImage = spotImage.url;
+            spot.previewImage = spotImage.url;
         } else{
-            review.dataValues.Spot.previewImage = null;
+            spot.previewImage = null;
         }
+
+        review.dataValues.Spot = spot;
 
         const reviewImages = await ReviewImage.findAll({
             where: {
