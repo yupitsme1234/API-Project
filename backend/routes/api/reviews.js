@@ -40,9 +40,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
             }
         })
         if (spotImage){
-            spot.previewImage = spotImage.url;
+            spot.dataValues.previewImage = spotImage.url;
         } else{
-            spot.previewImage = null;
+            spot.dataValues.previewImage = null;
         }
 
         review.dataValues.Spot = spot;
