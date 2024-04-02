@@ -98,13 +98,13 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
 
     // Body validation errors
-    if (!review || !stars) {
+    if (!review || !stars || Number(stars) < 0 || Number(stars) > 5 || !Number.isInteger(Number(stars))) {
         res.statusCode = 400;
         let errors = {};
 
         if (!review) {
             errors["review"] = "Review text is required"
-        } if (!stars) {
+        } if (!stars || Number(stars) < 0 || Number(stars) > 5 || !Number.isInteger(Number(stars))) {
             errors["stars"] = "Stars must be an integer from 1 to 5"
         }
 
