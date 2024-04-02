@@ -272,7 +272,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     for (let booking of bookings) {
         let [ errors, statusCode ] = bookingConflict(startDate, endDate, booking);
         if (Object.keys(errors).length) {
-            if (statusCode = 403) {
+            if (statusCode === 403) {
                 res.statusCode = 403;
                 return res.json({
                     "message": "Sorry, this spot is already booked for the specified dates",
