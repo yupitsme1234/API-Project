@@ -77,7 +77,7 @@ function bookingConflict(startDate, endDate, booking) {
 }
 
 // Edit a Booking
-router.put('/:bookingId', /*requireAuth,*/ async (req, res, next) => {
+router.put('/:bookingId', requireAuth, async (req, res, next) => {
     const { bookingId } = req.params;
     const { startDate, endDate } = req.body;
     const updatedBooking = await Booking.findByPk(bookingId);
@@ -91,13 +91,13 @@ router.put('/:bookingId', /*requireAuth,*/ async (req, res, next) => {
 
     };
 
-    // Require proper authorization: Booking must belong to the current user
-    // if (updatedBooking.userId !== req.user.id) {
-    //     res.statusCode = 403;
-    //     return res.json({
-    //         "message": "Forbidden"
-    //     });
-    // }
+    //Require proper authorization: Booking must belong to the current user
+    if (updatedBooking.userId !== req.user.id) {
+        res.statusCode = 403;
+        return res.json({
+            "message": "Forbidden"
+        });
+    }
 
     // Error response: Can't edit a booking that's past the end date
     if (Date.parse(endDate) < Date.parse(currentDate) && startDate < endDate) {
