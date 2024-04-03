@@ -523,8 +523,8 @@ router.get('/', async (req, res, next) => {
 
     return res.json({
         "Spots": [...spots],
-        page,
-        size
+        page: Number(page),
+        size: Number(size)
     })
 })
 
