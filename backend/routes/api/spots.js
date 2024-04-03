@@ -441,8 +441,11 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 // GET '/api/spots' Get all Spots
 router.get('/', async (req, res, next) => {
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-    const returnPage = page;
-    const returnSize = size;
+    const zero = 0.000000000001;
+    if (Number(minLat) === 0) minLat = zero;
+    if (Number(maxLat) === 0) maxLat = zero;
+    if (Number(minLng) === 0) minLng = zero;
+    if (Number(maxLng) === 0) maxLng = zero;
 
     let errors = {}
     if (Number(page) < 1) errors["page"] = "Page must be greater than or equal to 1";
@@ -471,6 +474,7 @@ router.get('/', async (req, res, next) => {
 
     const offset = size * (page - 1);
     const limit = size;
+
 
 
     const spots = await Spot.findAll({
