@@ -22,7 +22,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     // }
 
 
-    const user = await User.one({
+    const user = await User.findOne({
         where: {
             id: userId
         },
