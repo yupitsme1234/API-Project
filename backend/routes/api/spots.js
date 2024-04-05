@@ -448,11 +448,11 @@ router.get('/', async (req, res, next) => {
     if (Number(maxLng) === 0) maxLng = zero;
 
     let errors = {}
-    if (Number(page) < 1) errors["page"] = "Page must be greater than or equal to 1";
-    if (!page || Number(page) > 10 || isNaN(Number(page)) || !Number.isInteger(Number(page))) page = 1;
+    if (Number(page) < 1 || isNaN(Number(page)) || !Number.isInteger(Number(page))) errors["page"] = "Page must be an integer greater than or equal to 1";
+    if (!page || Number(page) > 10) page = 1;
 
-    if (Number(size) < 1) errors["size"] = "Size must be greater than or equal to 1";
-    if (!size || Number(size) > 20 || isNaN(Number(size)) || !Number.isInteger(Number(size))) size = 20;
+    if (Number(size) < 1 || isNaN(Number(size)) || !Number.isInteger(Number(size)) || Number(size) > 20) errors["size"] = "Size must be an integer between 1 and 20";
+    if (!size) size = 20;
 
     if (maxLat && isNaN(maxLat)) errors["maxLat"] = "Maximum latitude is invalid";
     if (minLat && isNaN(minLat)) errors["minLat"] = "Minimum latitude is invalid";
