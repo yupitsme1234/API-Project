@@ -222,7 +222,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             booking.dataValues.startDate = booking.startDate.toJSON().slice(0, 10);
             booking.dataValues.endDate = booking.endDate.toJSON().slice(0, 10)
         }
-        const user = User.findByPk(userId)
+        const user = await User.findByPk(userId)
 
         return res.json({
             "Bookings": [
