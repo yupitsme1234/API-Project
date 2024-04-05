@@ -55,7 +55,7 @@ router.post(
         };
 
         errors = {}
-        if (!validateEmail(email).length) errors["email"] = "Invalid email";
+        if (!validateEmail(email)) errors["email"] = "Invalid email";
         if (!username) errors["username"] = "Username is required";
         if (!firstName) errors["firstName"] = "First Name is required";
         if (!lastName) errors["lastName"] = "Last Name is required"

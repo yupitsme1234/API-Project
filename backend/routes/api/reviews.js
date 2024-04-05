@@ -7,22 +7,27 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { Review, ReviewImage, User, Spot, SpotImage } = require('../../db/models');
 
 // Get all reviews of current user
-router.get('/current', requireAuth, async (req, res, next) => {
+router.get('/current',  async (req, res, next) => {
     const userId = req.user.id;
     const reviews = await Review.findAll({
         where: {
             userId
         }
     });
-    if (!reviews.length) {
-        res.statusCode = 404;
-        return res.json({
-            "message": "User has no spots"
-        })
-    }
+    // if (!reviews.length) {
+    //     res.statusCode = 404;
+    //     return res.json({
+    //         "message": "User has no reviews"
+    //     })
+    // }
 
 
-    const user = await User.findByPk(userId);
+    const user = await User.one({
+        where: {
+            id: userId
+        },
+        attributes: { exclude: ['username'] }
+    });
     for (let review of reviews) {
         review.dataValues.User = user;
 
