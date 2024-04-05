@@ -188,7 +188,7 @@ function bookingConflict(startDate, endDate, booking) {
 // Get all Bookings for a Spot based on the Spot's id
 router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
-    const userId = 1; //req.user.id
+    const userId = req.user.id
     const spot = await Spot.findOne({
         where: { id: spotId }
     });
