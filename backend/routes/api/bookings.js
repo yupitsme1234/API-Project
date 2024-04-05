@@ -21,7 +21,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             where: {
                 id: booking.spotId
             },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
+            attributes: { exclude: ['description', 'createdAt', 'updatedAt'] }
         })
 
         const spotImage = await SpotImage.findOne({
