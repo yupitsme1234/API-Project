@@ -400,7 +400,7 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
         if (!lat || isNaN(lat) || Number(lat) < -90 || Number(lat) > 90) errors["lat"] = "Latitude must be within -90 and 90";
     }
     if (lng !== 0) {
-        if (!lng || isNaN(lng) || Number(lng) < -180 || Number(lat) > 180) errors["lng"] = "Longitude must be within -180 and 180";
+        if (!lng || isNaN(lng) || Number(lng) < -180 || Number(lng) > 180) errors["lng"] = "Longitude must be within -180 and 180";
     }
     if (name && name.toString().length > 50 || !name) errors["name"] = "Name must be less than 50 characters";
     if (!description) errors["description"] = "Description is required";
@@ -562,8 +562,6 @@ router.get('/', async (req, res, next) => {
 router.post('/', requireAuth, async (req, res, next) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     let errors = {};
-    let latZero = false;
-    let lngZero = false
 
     if (!address) errors["address"] = "Street address is required";
     if (!city) errors["city"] = "City is required";
@@ -573,7 +571,7 @@ router.post('/', requireAuth, async (req, res, next) => {
         if (!lat || isNaN(lat) || Number(lat) < -90 || Number(lat) > 90) errors["lat"] = "Latitude must be within -90 and 90";
     }
     if (lng !== 0) {
-        if (!lng || isNaN(lng) || Number(lng) < -180 || Number(lat) > 180) errors["lng"] = "Longitude must be within -180 and 180";
+        if (!lng || isNaN(lng) || Number(lng) < -180 || Number(lng) > 180) errors["lng"] = "Longitude must be within -180 and 180";
     }
     if (name && name.toString().length > 50 || !name) errors["name"] = "Name must be less than 50 characters";
     if (!description) errors["description"] = "Description is required";
