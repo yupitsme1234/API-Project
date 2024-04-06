@@ -14,12 +14,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
             userId
         }
     });
-    // if (!reviews.length) {
-    //     res.statusCode = 404;
-    //     return res.json({
-    //         "message": "User has no reviews"
-    //     })
-    // }
 
 
     const user = await User.findOne({
